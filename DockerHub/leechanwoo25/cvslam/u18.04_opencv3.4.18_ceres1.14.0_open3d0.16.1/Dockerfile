@@ -1,9 +1,9 @@
-FROM nvidia/cudagl:11.1.1-devel-ubuntu18.04
+FROM ubuntu:18.04
+# default CMake verison is 3.22.1
+# Open3D's minimum cmake version is 3.20.x
 
 # Install OpenCV & Ceres Dependencies
 RUN export DEBIAN_FRONTEND=noninteractive && cd ~ &&\
- # For fixing broken cuda apt package list
- apt-key adv --fetch-keys https://developer.download.nvidia.com/compute/cuda/repos/ubuntu1804/x86_64/3bf863cc.pub &&\
  apt update && apt dist-upgrade -y &&\
  apt install -y --allow-downgrades --allow-change-held-packages --no-install-recommends \
   build-essential wget curl unzip git vim openssh-server openssh-client \
@@ -53,12 +53,12 @@ RUN export OPENCV_VERSION=3.4.18 &&\
  make -j$(nproc) install && ldconfig &&\
  rm -rf ~/opencv*
 
-# Install Python 3 & Pytorch
+# Install Python 3
 RUN cd ~ && apt update &&\
  apt install -y --allow-downgrades --allow-change-held-packages --no-install-recommends \
   python3-dev python3-pip python3-setuptools vlc &&\
- python3 -m pip install --upgrade pip pillow wheel numpy pandas seaborn scipy matplotlib nbformat==5.5.0 &&\
- python3 -m pip install torch==1.8.2 torchvision==0.9.2 torchaudio==0.8.2 --extra-index-url https://download.pytorch.org/whl/lts/1.8/cu111 &&\
+ python3 -m pip install --upgrade pip &&\
+ python3 -m pip install --upgrade pillow wheel numpy pandas seaborn scipy matplotlib nbformat &&\
  apt-get clean && apt-get autoremove -y &&\
  rm -rf /var/lib/apt/lists/*
 
@@ -77,6 +77,7 @@ RUN cd ~ && git clone https://github.com/ccache/ccache.git &&\
 
 # Install Open3D
 RUN export OPEN3D_VERSION=v0.16.1 &&\
+ echo "check_certificate = on" >> ~/.wgetrc &&\
  cd ~ && apt update &&\
  apt install -y --allow-downgrades --allow-change-held-packages --no-install-recommends \
   # Open3D
