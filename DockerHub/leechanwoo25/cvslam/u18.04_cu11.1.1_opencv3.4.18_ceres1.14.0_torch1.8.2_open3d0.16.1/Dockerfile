@@ -14,9 +14,10 @@ RUN cd ~ &&\
   build-essential wget curl unzip git vim openssh-server openssh-client \
   gfortran libprotobuf-dev protobuf-compiler \
   libblas-dev liblapack-dev liblapacke-dev \
-  libjpeg-dev libpng-dev libtiff-dev libtbb-dev libgtk2.0-dev pkg-config \
+  libjpeg-dev libpng-dev libtiff-dev libtbb-dev libgtk2.0-dev mesa-utils libgl1-mesa-glx pkg-config \
   ffmpeg libavcodec-dev libavformat-dev libswscale-dev libxvidcore-dev libx264-dev libxine2-dev \
   libgoogle-glog-dev libgflags-dev libatlas-base-dev libeigen3-dev libsuitesparse-dev &&\
+ export "export LIBGL_ALWAYS_INDIRECT=1" >> /root/.bashrc &&\
  apt-get clean && apt-get autoremove -y &&\
  rm -rf /var/lib/apt/lists/*
 
