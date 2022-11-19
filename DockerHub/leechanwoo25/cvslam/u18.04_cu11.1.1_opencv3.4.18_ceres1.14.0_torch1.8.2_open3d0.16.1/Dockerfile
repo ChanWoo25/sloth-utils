@@ -24,16 +24,16 @@ RUN export CMAKE_VERSION=3.24.3 DEBIAN_FRONTEND=noninteractive &&\
  rm cmake.sh
 
 # Install Ceres
-RUN cd ~ \
-&&  export CERES_VERSION=1.14.0 &&\
-&&  git config --global http.sslverify false \
-&&  git clone https://ceres-solver.googlesource.com/ceres-solver \
-&&  cd ceres-solver \
-&&  git checkout ${CERES_VERSION} \
-&&  mkdir build && cd build \
-&&  cmake .. \
-&&  make -j$(nproc) install && ldconfig \
-&&  rm -rf ~/ceres-solver
+RUN cd ~ &&\
+ export CERES_VERSION=1.14.0 &&\
+ git config --global http.sslverify false &&\
+ git clone https://ceres-solver.googlesource.com/ceres-solver &&\
+ cd ceres-solver &&\
+ git checkout ${CERES_VERSION} &&\
+ mkdir build && cd build &&\
+ cmake .. &&\
+ make -j$(nproc) install && ldconfig &&\
+ rm -rf ~/ceres-solver
 
 # Install OpenCV
 RUN export OPENCV_VERSION=3.4.18 &&\
