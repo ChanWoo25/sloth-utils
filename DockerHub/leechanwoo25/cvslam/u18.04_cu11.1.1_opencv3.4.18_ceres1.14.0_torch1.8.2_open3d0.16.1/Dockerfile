@@ -96,13 +96,11 @@ RUN cd ~ && apt update &&\
  git clone https://github.com/isl-org/Open3D --branch ${OPEN3D_VERSION} --single-branch &&\
  cd Open3D && mkdir build && cd build &&\
  cmake \
-  -DBUILD_PYTHON_MODULE=ON \
-  -DPython3_ROOT=/usr/bin/python3 \
+  -DBUILD_PYTHON_MODULE=OFF \
   -DCMAKE_INSTALL_PREFIX=/root/open3d_install \
   -DBUILD_SHARED_LIBS=ON \
   .. &&\
  make install -j $(nproc) &&\
- make install-pip-package &&\
  cd && rm -rf Open3D &&\
  apt-get clean && apt-get autoremove -y &&\
  rm -rf /var/lib/apt/lists/*
