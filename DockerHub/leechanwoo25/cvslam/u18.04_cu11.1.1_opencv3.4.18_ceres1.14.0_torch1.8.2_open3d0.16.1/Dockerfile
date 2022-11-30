@@ -57,7 +57,8 @@ RUN export OPENCV_VERSION=3.4.18 &&\
 RUN cd ~ && apt update &&\
  apt install -y --allow-downgrades --allow-change-held-packages --no-install-recommends \
   python3-dev python3-pip python3-setuptools vlc &&\
- python3 -m pip install --upgrade pip pillow wheel numpy pandas seaborn scipy matplotlib nbformat==5.5.0 &&\
+ python3 -m pip install --upgrade pip &&\
+ python3 -m pip install --upgrade pillow wheel numpy pandas seaborn scipy matplotlib nbformat &&\
  python3 -m pip install torch==1.8.2 torchvision==0.9.2 torchaudio==0.8.2 --extra-index-url https://download.pytorch.org/whl/lts/1.8/cu111 &&\
  apt-get clean && apt-get autoremove -y &&\
  rm -rf /var/lib/apt/lists/*
