@@ -4,14 +4,22 @@ project(testEigen3)
 find_package(glog REQUIRED)
 
 ## Find Eigen3
-find_package(Eigen3 REQUIRED)
+find_package(Eigen3 3.4.0 REQUIRED)
 if (${EIGEN3_FOUND})
   message(STATUS "Found eigen3: version(${EIGEN3_VERSION_STRING}), include_path(${EIGEN3_INCLUDE_DIRS})")
 endif()
 
+## Find Sophus
+find_package(Sophus 22.04 REQUIRED)
+if (Sophus_FOUND)
+  message(STATUS "Found Sophus: version(${Sophus_VERSION}), include_path(${Sophus_DIR})")
+endif(Sophus_FOUND)
 
 add_executable(${PROJECT_NAME} main.cpp)
-target_link_libraries (${PROJECT_NAME} glog::glog)
+target_link_libraries (${PROJECT_NAME}
+PUBLIC glog::glog
+PUBLIC Sophus::Sophus
+)
 
 target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_17) # cxx_std_14 is minimum because of other dependencies
 
