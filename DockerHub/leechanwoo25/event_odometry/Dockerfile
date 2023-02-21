@@ -77,6 +77,13 @@ RUN cd ~ &&\
  make -j$(nproc) install &&\
  cd && rm -rf ccache
 
+RUN apt update &&\
+ apt install -y --allow-downgrades --allow-change-held-packages --no-install-recommends \
+  freeglut3-dev libglfw3-dev &&\
+ apt-get clean && apt-get autoremove -y &&\
+ rm -rf /var/lib/apt/lists/*
+
+
 # # Install Open3D
 # RUN export OPEN3D_VERSION=v0.16.1 &&\
 #  cd ~ && apt update &&\
