@@ -24,6 +24,7 @@ RUN export CMAKE_VERSION=3.24.3 DEBIAN_FRONTEND=noninteractive &&\
  bash cmake.sh --prefix=/usr/local --exclude-subdir &&\
  rm cmake.sh
 
+# Install glog
 RUN cd ~ &&\
  export GLOG_VERSION=v0.6.0 &&\
  git config --global http.sslverify false &&\
@@ -33,6 +34,17 @@ RUN cd ~ &&\
  cmake .. &&\
  make -j$(nproc) install && ldconfig &&\
  cd ~ && rm -rf glog
+
+# Install gflags
+RUN cd ~ &&\
+ export GFLAGS_VERSION=v2.2.2 &&\
+ git config --global http.sslverify false &&\
+ git clone https://github.com/gflags/gflags.git --single-branch -b ${GFLAGS_VERSION} &&\
+ cd gflags &&\
+ mkdir build && cd build &&\
+ cmake .. &&\
+ make -j$(nproc) install && ldconfig &&\
+ cd ~ && rm -rf gflags
 
 # Install Ceres
 RUN cd ~ &&\
@@ -79,7 +91,7 @@ RUN cd ~ &&\
 
 RUN apt update &&\
  apt install -y --allow-downgrades --allow-change-held-packages --no-install-recommends \
-  freeglut3-dev libglfw3-dev libglew-dev libgflags-dev &&\
+  freeglut3-dev libglfw3-dev libglew-dev &&\
  apt-get clean && apt-get autoremove -y &&\
  rm -rf /var/lib/apt/lists/*
 
@@ -89,11 +101,15 @@ RUN cd &&\
  cmake .. && make install &&\
  cd && rm -rf Sophus
 
-RUN cd && git clone https://github.com/gflags/gflags.git &&\
- cd gflags && mkdir build &&\
- cd build && cmake .. &&\
- make install &&\
- cd && rm -rf gflags
+# Install Python 3 & Pytorch
+RUN cd ~ && apt update &&\
+ apt install -y --allow-downgrades --allow-change-held-packages --no-install-recommends \
+  python3-dev python3-pip python3-setuptools vlc &&\
+ python3 -m pip install --upgrade pip &&\
+ python3 -m pip install --upgrade pillow wheel numpy pandas seaborn scipy matplotlib nbformat &&\
+ python3 -m pip install torch==1.8.2 torchvision==0.9.2 torchaudio==0.8.2 --extra-index-url https://download.pytorch.org/whl/lts/1.8/cu111 &&\
+ apt-get clean && apt-get autoremove -y &&\
+ rm -rf /var/lib/apt/lists/*
 
 # # Install Open3D
 # RUN export OPEN3D_VERSION=v0.16.1 &&\
