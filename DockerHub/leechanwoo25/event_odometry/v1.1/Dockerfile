@@ -25,6 +25,17 @@ RUN export CMAKE_VERSION=3.24.3 DEBIAN_FRONTEND=noninteractive &&\
  bash cmake.sh --prefix=/usr/local --exclude-subdir &&\
  rm cmake.sh
 
+# Install glog
+RUN cd ~ &&\
+ export GLOG_VERSION=v0.6.0 &&\
+ git config --global http.sslverify false &&\
+ git clone https://github.com/google/glog.git --single-branch -b ${GLOG_VERSION} &&\
+ cd glog &&\
+ mkdir build && cd build &&\
+ cmake .. &&\
+ make -j$(nproc) install && ldconfig &&\
+ cd ~ && rm -rf glog
+
 # Install Ceres
 RUN cd ~ &&\
  export CERES_VERSION=1.14.0 &&\
