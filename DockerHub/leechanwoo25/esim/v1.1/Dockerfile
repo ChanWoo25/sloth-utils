@@ -17,7 +17,7 @@ RUN export DEBIAN_FRONTEND=noninteractive && cd ~ &&\
   libblas-dev liblapack-dev liblapacke-dev tzdata dirmngr gnupg2 \
   libjpeg-dev libpng-dev libtiff-dev libtbb-dev libgtk2.0-dev mesa-utils libgl1-mesa-glx pkg-config \
   ffmpeg libavcodec-dev libavformat-dev libswscale-dev libxvidcore-dev libx264-dev libxine2-dev \
-  libgflags-dev libatlas-base-dev libsuitesparse-dev &&\
+  libgflags-dev libgoogle-glog-dev libatlas-base-dev libsuitesparse-dev &&\
  echo "export LIBGL_ALWAYS_INDIRECT=1" >> /root/.bashrc &&\
  apt-get clean && apt-get autoremove -y &&\
  rm -rf /var/lib/apt/lists/*
@@ -30,17 +30,6 @@ RUN export CMAKE_VERSION=3.24.3 DEBIAN_FRONTEND=noninteractive &&\
  chmod +x cmake.sh &&\
  bash cmake.sh --prefix=/usr/local --exclude-subdir &&\
  rm cmake.sh
-
-## Install glog
-RUN cd ~ &&\
- export GLOG_VERSION=v0.6.0 &&\
- git config --global http.sslverify false &&\
- git clone https://github.com/google/glog.git --single-branch -b ${GLOG_VERSION} &&\
- cd glog &&\
- mkdir build && cd build &&\
- cmake .. &&\
- make -j8 install && ldconfig &&\
- cd ~ && rm -rf glog
 
 ## Install Eigen
 RUN cd &&\
@@ -90,7 +79,11 @@ RUN apt-get update &&\
  apt-get install -y --no-install-recommends \
   python-catkin-tools \
   python-vcstool \
-  software-properties-common &&\
+  software-properties-common \
+  ros-kinetic-pcl-ros libproj-dev \
+  libglfw3 libglfw3-dev libglm-dev \
+  ros-kinetic-hector-trajectory-server \
+  libtool autoconf &&\
  rm -rf /var/lib/apt/lists/*
 
 ## Install OpenCV
