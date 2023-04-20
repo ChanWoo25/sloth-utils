@@ -58,29 +58,25 @@ RUN cd ~ &&\
  make -j$(nproc) install && ldconfig &&\
  rm -rf ~/ceres-solver
 
+## Install ROS
 RUN echo 'Etc/UTC' > /etc/timezone &&\
- ln -s /usr/share/zoneinfo/Etc/UTC /etc/localtime &&\
+#  ln -s /usr/share/zoneinfo/Etc/UTC /etc/localtime &&\
  apt-get update &&\
  apt-get install -q -y --no-install-recommends tzdata dirmngr gnupg2 &&\
  rm -rf /var/lib/apt/lists/*
-
 RUN echo "deb http://packages.ros.org/ros/ubuntu bionic main" > /etc/apt/sources.list.d/ros1-latest.list &&\
  apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys C1CF6E31E6BADE8868B172B4F42ED6FBAB17C654
-
 ENV LANG=C.UTF-8 LC_ALL=C.UTF-8 ROS_DISTRO=melodic
-
 RUN apt-get update &&\
  apt-get install -y --no-install-recommends ros-melodic-ros-core=1.4.1-0* &&\
  apt-get install --no-install-recommends -y python-rosdep python-rosinstall python-vcstools &&\
  rm -rf /var/lib/apt/lists/* &&\
  rosdep init && rosdep update --rosdistro $ROS_DISTRO
-
 RUN apt-get update &&\
  apt-get install -y --no-install-recommends ros-melodic-robot=1.4.1-0* &&\
- apt-get install -y --no-install-recommends ros-melodic-desktop=1.4.1-0* &&\
- apt-get install -y --no-install-recommends ros-melodic-desktop-full=1.4.1-0* &&\
+#  apt-get install -y --no-install-recommends ros-melodic-desktop=1.4.1-0* &&\
+#  apt-get install -y --no-install-recommends ros-melodic-desktop-full=1.4.1-0* &&\
  rm -rf /var/lib/apt/lists/*
-
 RUN apt-get update &&\
  apt-get install -y --no-install-recommends \
   python-catkin-tools \
@@ -89,7 +85,7 @@ RUN apt-get update &&\
  rm -rf /var/lib/apt/lists/*
 
 # Install OpenCV
-RUN export OPENCV_VERSION=3.4.18 &&\
+RUN export OPENCV_VERSION=3.4.16 &&\
  cd ~ && git config --global http.sslverify false &&\
  git clone https://github.com/opencv/opencv.git --branch ${OPENCV_VERSION} --single-branch &&\
  git clone https://github.com/opencv/opencv_contrib.git --branch ${OPENCV_VERSION} --single-branch &&\

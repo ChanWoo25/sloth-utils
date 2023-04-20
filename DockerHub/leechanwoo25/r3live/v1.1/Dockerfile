@@ -58,29 +58,25 @@ RUN cd ~ &&\
  make -j$(nproc) install && ldconfig &&\
  rm -rf ~/ceres-solver
 
+## Install ROS
 RUN echo 'Etc/UTC' > /etc/timezone &&\
- ln -s /usr/share/zoneinfo/Etc/UTC /etc/localtime &&\
+#  ln -s /usr/share/zoneinfo/Etc/UTC /etc/localtime &&\
  apt-get update &&\
  apt-get install -q -y --no-install-recommends tzdata dirmngr gnupg2 &&\
  rm -rf /var/lib/apt/lists/*
-
 RUN echo "deb http://packages.ros.org/ros/ubuntu bionic main" > /etc/apt/sources.list.d/ros1-latest.list &&\
  apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys C1CF6E31E6BADE8868B172B4F42ED6FBAB17C654
-
 ENV LANG=C.UTF-8 LC_ALL=C.UTF-8 ROS_DISTRO=melodic
-
 RUN apt-get update &&\
  apt-get install -y --no-install-recommends ros-melodic-ros-core=1.4.1-0* &&\
  apt-get install --no-install-recommends -y python-rosdep python-rosinstall python-vcstools &&\
  rm -rf /var/lib/apt/lists/* &&\
  rosdep init && rosdep update --rosdistro $ROS_DISTRO
-
 RUN apt-get update &&\
  apt-get install -y --no-install-recommends ros-melodic-robot=1.4.1-0* &&\
- apt-get install -y --no-install-recommends ros-melodic-desktop=1.4.1-0* &&\
- apt-get install -y --no-install-recommends ros-melodic-desktop-full=1.4.1-0* &&\
+#  apt-get install -y --no-install-recommends ros-melodic-desktop=1.4.1-0* &&\
+#  apt-get install -y --no-install-recommends ros-melodic-desktop-full=1.4.1-0* &&\
  rm -rf /var/lib/apt/lists/*
-
 RUN apt-get update &&\
  apt-get install -y --no-install-recommends \
   python-catkin-tools \
@@ -89,7 +85,7 @@ RUN apt-get update &&\
  rm -rf /var/lib/apt/lists/*
 
 # Install OpenCV
-RUN export OPENCV_VERSION=3.4.18 &&\
+RUN export OPENCV_VERSION=3.4.16 &&\
  cd ~ && git config --global http.sslverify false &&\
  git clone https://github.com/opencv/opencv.git --branch ${OPENCV_VERSION} --single-branch &&\
  git clone https://github.com/opencv/opencv_contrib.git --branch ${OPENCV_VERSION} --single-branch &&\
@@ -105,16 +101,6 @@ RUN export OPENCV_VERSION=3.4.18 &&\
  make -j$(nproc) install && ldconfig &&\
  rm -rf ~/opencv*
 
-# # Install Python 3 & Pytorch
-# RUN cd ~ && apt update &&\
-#  apt install -y --allow-downgrades --allow-change-held-packages --no-install-recommends \
-#   python3-dev python3-pip python3-setuptools vlc &&\
-#  python3 -m pip install --upgrade pip &&\
-#  python3 -m pip install --upgrade pillow wheel numpy pandas seaborn scipy matplotlib nbformat &&\
-#  python3 -m pip install torch==1.8.2 torchvision==0.9.2 torchaudio==0.8.2 --extra-index-url https://download.pytorch.org/whl/lts/1.8/cu111 &&\
-#  apt-get clean && apt-get autoremove -y &&\
-#  rm -rf /var/lib/apt/lists/*
-
 # Install ccache
 RUN cd ~ && git clone https://github.com/ccache/ccache.git &&\
  cd ccache && git checkout v4.6 -b 4.6 &&\
@@ -128,27 +114,36 @@ RUN cd ~ && git clone https://github.com/ccache/ccache.git &&\
  make -j$(nproc) install &&\
  cd && rm -rf ccache
 
-# # Install Open3D
-# RUN export OPEN3D_VERSION=v0.16.1 &&\
-#  cd ~ && apt update &&\
-#  apt install -y --allow-downgrades --allow-change-held-packages --no-install-recommends \
-#   # Open3D
-#   xorg-dev libxcb-shm0 libglu1-mesa-dev \
-#   # Filament build-from-source
-#   clang-7 libc++-7-dev libc++abi-7-dev \
-#   libsdl2-dev ninja-build libxi-dev \
-#   # Headless rendering
-#   libosmesa6-dev &&\
-#  git config --global http.sslverify false &&\
-#  git clone https://github.com/isl-org/Open3D --branch ${OPEN3D_VERSION} --single-branch &&\
-#  cd Open3D && mkdir build && cd build &&\
-#  cmake \
-#   -DBUILD_PYTHON_MODULE=ON \
-#   -DPython3_ROOT=/usr/bin/python3 \
-#   -DCMAKE_INSTALL_PREFIX=/usr/local/open3d_install \
-#   -DBUILD_SHARED_LIBS=ON \
-#   .. &&\
-#  make install -j $(nproc) &&\
-#  apt-get clean && apt-get autoremove -y &&\
-#  rm -rf /var/lib/apt/lists/*
-#  # After install this, refer here "https://github.com/isl-org/open3d-cmake-find-package" to link open3d libs with your project
+RUN apt-get update &&\
+ apt-get install -y --no-install-recommends \
+  ros-melodic-cv-bridge \
+  ros-melodic-tf \
+  ros-melodic-message-filters \
+  ros-melodic-image-transport* &&\
+ rm -rf /var/lib/apt/lists/*
+
+## Install Livox SDK
+RUN cd ~ &&\
+ git clone https://github.com/Livox-SDK/Livox-SDK.git &&\
+ cd Livox-SDK &&\
+ cd build && cmake .. && make -j4 install &&\
+ cd ~ & rm -rf Livox-SDK
+
+## PCL dependency
+RUN apt-get update &&\
+ apt-get install -y --no-install-recommends \
+  ros-melodic-pcl-ros libcgal-dev pcl-tools &&\
+ rm -rf /var/lib/apt/lists/*
+
+## Install Livox ROS Driver
+RUN cd ~ && mkdir -p ws_livox/src && cd ws_livox/src &&\
+ git clone https://github.com/Livox-SDK/livox_ros_driver.git &&\
+ . /opt/ros/melodic/setup.sh &&\
+ cd .. && catkin_make
+
+## Clone R3Live
+# cd ~/catkin_ws/src
+# git clone https://github.com/hku-mars/r3live.git
+# cd ../
+# catkin_make
+# source ~/catkin_ws/devel/setup.bash
