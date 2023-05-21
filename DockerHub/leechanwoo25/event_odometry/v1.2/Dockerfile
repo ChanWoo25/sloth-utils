@@ -7,7 +7,7 @@ RUN export DEBIAN_FRONTEND=noninteractive && cd ~ &&\
  apt update && apt dist-upgrade -y &&\
  apt install -y --allow-downgrades --allow-change-held-packages --no-install-recommends \
   build-essential wget curl unzip git vim openssh-server openssh-client \
-  gfortran libprotobuf-dev protobuf-compiler \
+  gfortran libprotobuf-dev protobuf-compiler bash-completion htop \
   libblas-dev liblapack-dev liblapacke-dev libfmt-dev tzdata dirmngr gnupg2 \
   libjpeg-dev libpng-dev libtiff-dev libtbb-dev libgtk2.0-dev mesa-utils libgl1-mesa-glx pkg-config \
   ffmpeg libavcodec-dev libavformat-dev libswscale-dev libxvidcore-dev libx264-dev libxine2-dev \
@@ -57,7 +57,7 @@ RUN cd ~ &&\
  rm -rf ~/ceres-solver
 
 # Install OpenCV
-RUN export OPENCV_VERSION=3.4.18 &&\
+RUN export OPENCV_VERSION=3.4.19 &&\
  cd && git config --global http.sslverify false &&\
  git clone https://github.com/opencv/opencv.git --branch ${OPENCV_VERSION} --single-branch &&\
  git clone https://github.com/opencv/opencv_contrib.git --branch ${OPENCV_VERSION} --single-branch &&\
