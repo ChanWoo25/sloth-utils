@@ -9,7 +9,7 @@ RUN apt-key adv --fetch-keys https://developer.download.nvidia.com/compute/cuda/
 
 RUN apt install -y --allow-downgrades --allow-change-held-packages --no-install-recommends \
       build-essential cmake wget curl unzip git vim openssh-server openssh-client \
-      libgoogle-glog-dev libgflags-dev vlc pkg-config \
+      libgflags-dev vlc pkg-config \
       python3-dev python3-pip python3-setuptools \
       gfortran libprotobuf-dev protobuf-compiler &&\
     apt autoremove -y && apt clean
