@@ -1,12 +1,8 @@
 # Cuda Toolkit version is following pytorch 1.8.2 LTS Version.
 FROM nvidia/cudagl:11.1.1-devel-ubuntu20.04
 
-# Declare variables
-ARG DEBIAN_FRONTEND=noninteractive \
-    EIGEN_VERSION=3.4.0 \
-    OPENCV_VERSION=3.4.19
-
 # For fixing broken cuda apt package list
+ARG DEBIAN_FRONTEND=noninteractive
 RUN apt-key adv --fetch-keys https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2004/x86_64/3bf863cc.pub &&\
     apt update && apt dist-upgrade -y &&\
     apt autoremove -y && apt clean
@@ -30,6 +26,7 @@ RUN apt install -y --allow-downgrades --allow-change-held-packages --no-install-
     apt autoremove -y && apt clean
 
 # Install Eigen
+ARG EIGEN_VERSION=3.4.0
 RUN git clone -b ${EIGEN_VERSION} \
               --single-branch \
               https://gitlab.com/libeigen/eigen.git &&\
@@ -39,6 +36,7 @@ RUN git clone -b ${EIGEN_VERSION} \
     cd && rm -rf eigen
 
 # Install OpenCV
+ARG OPENCV_VERSION=3.4.19
 RUN cd && git config --global http.sslverify false &&\
     git clone https://github.com/opencv/opencv.git \
       --branch ${OPENCV_VERSION} --single-branch &&\
