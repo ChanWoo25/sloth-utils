@@ -15,7 +15,7 @@ RUN export DEBIAN_FRONTEND=noninteractive &&\
   libblas-dev liblapack-dev liblapacke-dev libfmt-dev tzdata dirmngr gnupg2 \
   libjpeg-dev libpng-dev libtiff-dev libtbb-dev libgtk2.0-dev mesa-utils libgl1-mesa-glx pkg-config \
   ffmpeg libavcodec-dev libavformat-dev libswscale-dev libxvidcore-dev libx264-dev libxine2-dev \
-  libgflags-dev libatlas-base-dev libsuitesparse-dev libeigen3-dev &&\
+  libatlas-base-dev libsuitesparse-dev libeigen3-dev &&\
  echo "export LIBGL_ALWAYS_INDIRECT=1" >> /root/.bashrc &&\
  apt-get clean && apt-get autoremove -y &&\
  rm -rf /var/lib/apt/lists/*
