@@ -1,4 +1,4 @@
-FROM nvidia/cudagl:11.3.1-devel-ubuntu20.04
+FROM nvidia/cudagl:10.2-devel-ubuntu18.04
 
 # Tips
 # - If you use WSL2, set 'export LIBGL_ALWAYS_INDIRECT=0' into '~/.bashrc'
@@ -36,41 +36,30 @@ RUN cd ~ &&\
  apt clean && apt autoremove -y &&\
  rm -rf /var/lib/apt/lists/*
 
-# Install Clang & Clangd
-# - version 10 is default for Ubuntu 20.04
-RUN cd ~ &&\
- wget https://apt.llvm.org/llvm.sh &&\
- chmod +x llvm.sh && ./llvm.sh 10 &&\
- apt update && apt install -y clang clangd &&\
- echo "export CC=/usr/bin/clang"    >> ~/.bashrc &&\
- echo "export CXX=/usr/bin/clang++" >> ~/.bashrc &&\
- apt clean && apt autoremove -y &&\
- rm -rf /var/lib/apt/lists/*
-
-# Install ROS noetic
+# Install ROS melodic
 RUN cd ~ &&\
  echo 'Etc/UTC' > /etc/timezone &&\
  echo "deb http://packages.ros.org/ros/ubuntu $(lsb_release -sc) main" > /etc/apt/sources.list.d/ros1-latest.list &&\
- apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys C1CF6E31E6BADE8868B172B4F42ED6FBAB17C654 &&\
+ curl -s https://raw.githubusercontent.com/ros/rosdistro/master/ros.asc | apt-key add - &&\
  export LANG=C.UTF-8 LC_ALL=C.UTF-8 &&\
  apt update &&\
- apt install -y --no-install-recommends ros-noetic-desktop-full &&\
+ apt install -y --no-install-recommends ros-melodic-desktop-full &&\
  apt clean && apt autoremove -y &&\
  rm -rf /var/lib/apt/lists/*
 RUN cd ~ &&\
  apt update &&\
  apt install --no-install-recommends -y \
-  python3-dev \
-  python3-pip \
-  python3-rosdep \
-  python3-rosinstall \
-  python3-rosinstall-generator \
-  python3-wstool \
-  python3-vcstool \
-  python3-vcstools \
-  python3-catkin-tools \
+  python-dev \
+  python-pip \
+  python-rosdep \
+  python-rosinstall \
+  python-rosinstall-generator \
+  python-wstool \
+  python-vcstool \
+  python-vcstools \
+  python-catkin-tools \
   bash-completion &&\
- rosdep init && rosdep update --rosdistro noetic &&\
+ rosdep init && rosdep update --rosdistro melodic &&\
  apt clean && apt autoremove -y &&\
  rm -rf /var/lib/apt/lists/*
 
@@ -78,7 +67,8 @@ RUN cd ~ &&\
 RUN cd ~ &&\
  export FMT_VERSION=10.1.1 &&\
  git clone --single-branch -b ${FMT_VERSION} https://github.com/fmtlib/fmt.git  &&\
- cd fmt && cmake -B build && cd build && make -j6 install &&\
+ cd fmt && mkdir build && cd build &&\
+ cmake .. && make -j6 install &&\
  rm -rf ~/fmt
 
 # Install Miniconda3
