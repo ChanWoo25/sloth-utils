@@ -7,7 +7,7 @@ ENV DEBIAN_FRONTEND=noninteractive
 
 # Install OpenCV & Ceres Dependencies
 RUN cd ~ &&\
- apt-key adv --fetch-keys https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2004/x86_64/3bf863cc.pub &&\
+ apt-key adv --fetch-keys https://developer.download.nvidia.com/compute/cuda/repos/ubuntu1804/x86_64/3bf863cc.pub &&\
  apt update && apt dist-upgrade -y &&\
  echo "export LIBGL_ALWAYS_INDIRECT=1" >> /root/.bashrc &&\
  apt clean && apt autoremove -y &&\
