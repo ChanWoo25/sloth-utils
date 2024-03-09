@@ -1,12 +1,11 @@
 # Author: Chanwoo Lee (leechanwoo25@gmail.com)
-# Update: 2024. 01. 16. PM 2:27
-# Note: write when building cvlab_r2live
+# Last modified: 2024.03.09 - 16:00
 FROM nvidia/cudagl:11.3.1-devel-ubuntu18.04
 
 # [Note]
 # - If you use WSL2, set 'export LIBGL_ALWAYS_INDIRECT=0' into '~/.bashrc'
 # - Otherwise, set 'export LIBGL_ALWAYS_INDIRECT=1' into '~/.bashrc'
-ENV DEBIAN_FRONTEND=noninteractive N_WORKER=12
+ENV DEBIAN_FRONTEND=noninteractive N_WORKER=8
 
 RUN cd ~ &&\
  apt-key adv --fetch-keys https://developer.download.nvidia.com/compute/cuda/repos/ubuntu1804/x86_64/3bf863cc.pub &&\

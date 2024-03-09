@@ -1,6 +1,8 @@
+# Author: Chanwoo Lee (leechanwoo25@gmail.com)
+# Last modified: 2024.03.09 - 16:00
 FROM nvidia/cudagl:11.3.1-devel-ubuntu20.04
 
-# Tips
+# [Note]
 # - If you use WSL2, set 'export LIBGL_ALWAYS_INDIRECT=0' into '~/.bashrc'
 # - Otherwise, set 'export LIBGL_ALWAYS_INDIRECT=1' into '~/.bashrc'
 ENV DEBIAN_FRONTEND=noninteractive
